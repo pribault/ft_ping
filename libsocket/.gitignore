@@ -1,0 +1,4 @@
+.obj
+.bin
+libsocket.a
+libsocket.so

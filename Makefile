@@ -6,7 +6,7 @@
 #    By: pribault <pribault@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/04 14:45:06 by pribault          #+#    #+#              #
-#    Updated: 2018/05/04 14:56:04 by pribault         ###   ########.fr        #
+#    Updated: 2018/05/04 15:25:14 by pribault         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,9 +27,15 @@ LIBFT_INC_DIR =	$(LIBFT)/include
 LIBFT_INC =	libft.h ft_printf.h ft_joinf.h\
 			malloc.h prototypes.h structs.h
 
+LIBSOCKET =	libsocket
+LIBSOCKET_INC_DIR =	$(LIBSOCKET)/include
+LIBSOCKET_INC =		libsocket.h libsocket_defines.h libsocket_enums.h\
+					libsocket_structures.h
+
 INCLUDES =	$(sort \
 			$(patsubst %.h, $(INC_DIR)/%.h, $(INC))\
-			$(patsubst %.h, $(LIBFT_INC_DIR)/%.h, $(LIBFT_INC)))
+			$(patsubst %.h, $(LIBFT_INC_DIR)/%.h, $(LIBFT_INC))\
+			$(patsubst %.h, $(LIBSOCKET_INC_DIR)/%.h, $(LIBSOCKET_INC)))
 
 .PHONY: all clean fclean re
 
@@ -38,15 +44,16 @@ all: $(NAME)
 $(LIBFT)/libft.a:
 	make -C $(LIBFT)
 
-$(NAME): $(OBJ)
-	echo $(OBJ)
-	echo $(INCLUDES)
-	$(CC) -o $@ $(FLAGS) $(OBJ) -L $(LIBFT) -lft
+$(LIBSOCKET)/libsocket.a:
+	make -C $(LIBSOCKET)
+
+$(NAME): $(OBJ) $(LIBFT)/libft.a $(LIBSOCKET)/libsocket.a
+	$(CC) -o $@ $(FLAGS) $(OBJ) -L $(LIBFT) -lft -L $(LIBSOCKET) -lsocket
 
 $(OBJ_DIR):
 	mkdir -p $@
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES) $(LIBFT)/libft.a | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES) | $(OBJ_DIR)
 	$(CC) -o $@ $(FLAGS) -I $(INC_DIR) -I $(LIBFT_INC_DIR) -c $<
 
 clean:
