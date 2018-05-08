@@ -42,7 +42,8 @@
 typedef enum	e_protocol
 {
 	TCP = SOCK_STREAM,
-	UDP = SOCK_DGRAM
+	UDP = SOCK_DGRAM,
+	ICMP = SOCK_RAW
 }				t_protocol;
 
 typedef enum	e_domain

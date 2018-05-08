@@ -11,14 +11,15 @@
 # **************************************************************************** #
 
 NAME =	ft_ping
-FLAGS =	-Wall -Wextra -Werror
+FLAGS =	-Wall -Wextra
 CC = clang
 
 OBJ_DIR =	.obj
 SRC_DIR =	src
 INC_DIR =	include
 
-SRC =	ft_ping.c
+SRC =	ft_ping.c client_callback.c message_callback.c\
+		flags.c
 OBJ =	$(sort $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC)))
 INC =	ft_ping.h
 
@@ -48,13 +49,13 @@ $(LIBSOCKET)/libsocket.a:
 	make -C $(LIBSOCKET)
 
 $(NAME): $(OBJ) $(LIBFT)/libft.a $(LIBSOCKET)/libsocket.a
-	$(CC) -o $@ $(FLAGS) $(OBJ) -L $(LIBFT) -lft -L $(LIBSOCKET) -lsocket
+	$(CC) -o $@ $(FLAGS) $(OBJ) -L $(LIBSOCKET) -lsocket -L $(LIBFT) -lft
 
 $(OBJ_DIR):
 	mkdir -p $@
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES) | $(OBJ_DIR)
-	$(CC) -o $@ $(FLAGS) -I $(INC_DIR) -I $(LIBFT_INC_DIR) -c $<
+	$(CC) -o $@ $(FLAGS) -I $(INC_DIR) -I $(LIBFT_INC_DIR) -I $(LIBSOCKET_INC_DIR) -c $<
 
 clean:
 	make -C $(LIBFT) clean

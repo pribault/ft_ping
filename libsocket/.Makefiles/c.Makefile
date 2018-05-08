@@ -51,7 +51,7 @@ INCLUDE =	$(sort \
 N =	0
 MAX =	$(words $(OBJ))
 COMPILED =	false
-LIBFT =			libft
+LIBFT =			../libft
 LIBFT_INC_DIR =	$(LIBFT)/include
 LIBFT_INCLUDES =	libft.h\
 					ft_printf.h\

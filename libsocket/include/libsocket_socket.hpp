@@ -38,7 +38,7 @@
 # ifdef __cplusplus
 
 #  include "libsocket_callbacks.hpp"
-#  include <boost/circular_buffer.hpp>
+// #  include <boost/circular_buffer.hpp>
 
 namespace libsocket
 {
@@ -51,7 +51,7 @@ namespace libsocket
 		private:
 
 			std::vector<Client>				clients;
-			boost::circular_buffer<Message>	write_queue;
+			// boost::circular_buffer<Message>	write_queue;
 			Callbacks						callbacks;
 	};
 }
