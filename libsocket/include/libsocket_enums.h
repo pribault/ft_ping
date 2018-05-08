@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/16 13:35:56 by pribault          #+#    #+#             */
-/*   Updated: 2018/04/28 13:17:27 by pribault         ###   ########.fr       */
+/*   Updated: 2018/05/08 15:03:29 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@
 typedef enum	e_protocol
 {
 	TCP = SOCK_STREAM,
-	UDP = SOCK_DGRAM
+	UDP = SOCK_DGRAM,
+	ICMP = SOCK_RAW
 }				t_protocol;
 
 typedef enum	e_domain

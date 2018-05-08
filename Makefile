@@ -6,7 +6,7 @@
 #    By: pribault <pribault@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/04 14:45:06 by pribault          #+#    #+#              #
-#    Updated: 2018/05/04 15:25:14 by pribault         ###   ########.fr        #
+#    Updated: 2018/05/04 15:28:56 by pribault         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,10 +58,12 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES) | $(OBJ_DIR)
 
 clean:
 	make -C $(LIBFT) clean
+	make -C $(LIBSOCKET) clean
 	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	make -C $(LIBFT) fclean
+	make -C $(LIBSOCKET) fclean
 	rm -f $(NAME)
 
 re: fclean all
