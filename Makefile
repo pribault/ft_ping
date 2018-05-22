@@ -6,7 +6,7 @@
 #    By: pribault <pribault@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/04 14:45:06 by pribault          #+#    #+#              #
-#    Updated: 2018/05/04 15:28:56 by pribault         ###   ########.fr        #
+#    Updated: 2018/05/22 11:13:28 by pribault         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,6 +50,8 @@ $(LIBSOCKET)/libsocket.a:
 
 $(NAME): $(OBJ) $(LIBFT)/libft.a $(LIBSOCKET)/libsocket.a
 	$(CC) -o $@ $(FLAGS) $(OBJ) -L $(LIBSOCKET) -lsocket -L $(LIBFT) -lft
+	sudo chown root:root $(NAME)
+	sudo chmod 4755 $(NAME)
 
 $(OBJ_DIR):
 	mkdir -p $@

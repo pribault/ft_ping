@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:13 by pribault          #+#    #+#             */
-/*   Updated: 2018/05/04 14:54:13 by pribault         ###   ########.fr       */
+/*   Updated: 2018/05/21 23:44:10 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 
 # include "libft.h"
 # include "libsocket.h"
+# include <linux/ip.h>
 # include <linux/icmp.h>
 
 typedef enum	e_ping_errors
 {
-	ERROR_CANNOT_CONNECT = ERROR_FT_MAX
+	ERROR_CANNOT_CONNECT = ERROR_FT_MAX,
+	ERROR_CANNOT_CREATE_SOCKET
 }				t_ping_errors;
 
 typedef struct	s_env
