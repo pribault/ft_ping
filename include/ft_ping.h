@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:13 by pribault          #+#    #+#             */
-/*   Updated: 2018/05/21 23:44:10 by pribault         ###   ########.fr       */
+/*   Updated: 2018/05/23 23:20:21 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,8 @@ void			client_add(t_socket *socket, t_client *client);
 void			client_del(t_socket *socket, t_client *client);
 void			msg_recv(t_socket *socket, t_client *client, t_msg *msg);
 void			msg_send(t_socket *socket, t_client *client, t_msg *msg);
+
+void			endian(void *ptr, size_t size);
+void			endian_iphdr(struct iphdr *iphdr);
 
 #endif
