@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:09 by pribault          #+#    #+#             */
-/*   Updated: 2018/05/30 09:26:53 by pribault         ###   ########.fr       */
+/*   Updated: 2018/05/30 22:56:08 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,34 +33,34 @@ t_error			g_errors[] = {
 	{ERROR_ADDRESS_SET, "error already set to %s", 0},
 	{ERROR_NO_ADDRESS, "no address set", ERROR_EXIT},
 	{ERROR_CANNOT_FIND_ADDRESS, "cannot find address %s", ERROR_EXIT},
+	{ERROR_ALLOCATION_2, "cannot allocate memory", 0},
+	{ERROR_CANNOT_SET_OPTION, "cannot set socket options", 0},
 	{0, NULL, 0},
 };
 
-void	connect_socket(t_env *env)
+void	buffer_full(t_socket *socket)
 {
-	struct addrinfo	hints;
-	struct addrinfo	*res;
-	int	fd;
+	t_env	*env;
 
-	if ((fd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP)) == -1)
-		ft_error(2, ERROR_CANNOT_CREATE_SOCKET, NULL);
-	ft_bzero(&hints, sizeof(struct addrinfo));
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = SOCK_RAW;
-	hints.ai_protocol = IPPROTO_ICMP;
-	if (getaddrinfo(env->address, NULL, &hints, &res))
-		ft_error(2, ERROR_CANNOT_FIND_ADDRESS, env->address);
-	socket_add_client_by_fd(env->socket, fd);
+	env = socket_get_data(socket);
+	if (env->opt & OPT_VERBOSE)
+		ft_printf("buffer full\n");
+	socket_poll_events(socket, ALLOW_WRITE);
 }
 
 void	init_env(t_env *env)
 {
+	env->packet_size = DEFAULT_PACKET_SIZE;
+	env->ttl = DEFAULT_TTL;
 	env->socket = socket_new();
 	socket_attach_data(env->socket, env);
 	socket_set_callback(env->socket, SOCKET_CLIENT_ADD_CB, &client_add);
 	socket_set_callback(env->socket, SOCKET_CLIENT_DEL_CB, &client_add);
-	socket_set_callback(env->socket, SOCKET_MSG_RECV_CB, msg_recv);
-	socket_set_callback(env->socket, SOCKET_MSG_SEND_CB, msg_send);
+	socket_set_callback(env->socket, SOCKET_CLIENT_EXCEPTION_CB, &client_excpt);
+	socket_set_callback(env->socket, SOCKET_MSG_RECV_CB, &msg_recv);
+	socket_set_callback(env->socket, SOCKET_MSG_SEND_CB, &msg_send);
+	socket_set_callback(env->socket, SOCKET_MSG_TRASH_CB, &msg_trash);
+	socket_set_callback(env->socket, SOCKET_BUFFER_FULL_CB, &buffer_full);
 }
 
 int		main(int argc, char **argv)
@@ -74,7 +74,8 @@ int		main(int argc, char **argv)
 		(t_long_flag *)&g_long_flags, (void *)&default_getter), &env);
 	if (!env.address)
 		ft_error(2, ERROR_NO_ADDRESS, NULL);
-	connect_socket(&env);
+	if (!socket_connect(env.socket, (t_method){ICMP, IPV4}, env.address, NULL))
+		ft_error(2, ERROR_CANNOT_CONNECT, env.address);
 	while (1)
 		socket_poll_events(env.socket, ALLOW_READ | ALLOW_WRITE);
 	return (0);

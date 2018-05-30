@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 22:40:41 by pribault          #+#    #+#             */
-/*   Updated: 2018/05/30 01:22:16 by pribault         ###   ########.fr       */
+/*   Updated: 2018/05/30 21:59:19 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	debug_icmp(struct icmphdr *icmphdr, size_t size)
 void	treat_icmphdr(t_env *env, t_client *client,
 		struct icmphdr *icmphdr, size_t size)
 {
+	(void)client;
 	if (env->opt & OPT_VERBOSE)
 		debug_icmp(icmphdr, size);
 	if (compute_sum(icmphdr, size / 2))

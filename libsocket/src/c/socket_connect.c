@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/18 10:26:20 by pribault          #+#    #+#             */
-/*   Updated: 2018/04/28 13:18:22 by pribault         ###   ########.fr       */
+/*   Updated: 2018/05/30 22:40:40 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ static int	iter_on_addresses(t_socket *socket, t_client *client,
 	return (0);
 }
 
+#include <errno.h>
+
 int			socket_connect(t_socket *msocket, t_method method, char *address,
 			char *port)
 {
@@ -71,9 +73,11 @@ int			socket_connect(t_socket *msocket, t_method method, char *address,
 	ft_bzero(&client, sizeof(t_client));
 	hints.ai_family = method.domain;
 	hints.ai_socktype = method.protocol;
+	hints.ai_protocol = (method.protocol == ICMP) ? IPPROTO_ICMP : 0;
 	result = NULL;
 	if (getaddrinfo(address, port, &hints, &result) != 0 ||
-		(client.fd = socket(method.domain, method.protocol, 0)) < 0)
+		(client.fd = socket(method.domain, method.protocol,
+			(method.protocol == ICMP) ? IPPROTO_ICMP : 0)) < 0)
 	{
 		if (result)
 			freeaddrinfo(result);

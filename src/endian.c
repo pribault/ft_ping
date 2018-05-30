@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/23 23:06:59 by pribault          #+#    #+#             */
-/*   Updated: 2018/05/23 23:26:11 by pribault         ###   ########.fr       */
+/*   Updated: 2018/05/30 21:37:37 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,5 @@ void	endian_iphdr(struct iphdr *iphdr)
 	endian(&iphdr->tot_len, sizeof(iphdr->tot_len));
 	endian(&iphdr->id, sizeof(iphdr->id));
 	endian(&iphdr->frag_off, sizeof(iphdr->frag_off));
+	endian(&iphdr->check, sizeof(iphdr->check));
 }

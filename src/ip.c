@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 21:17:12 by pribault          #+#    #+#             */
-/*   Updated: 2018/05/30 09:14:39 by pribault         ###   ########.fr       */
+/*   Updated: 2018/05/30 22:19:05 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,11 @@ void	debug_iphdr(struct iphdr *iphdr)
 	ft_printf("\tihl: %u\n", iphdr->ihl);
 	ft_printf("\tversion: %u\n", iphdr->version);
 	ft_printf("\tcheck: %hu\n", iphdr->check);
+	ft_printf("\ttos: %hhu\n", iphdr->tos);
 	ft_printf("\tlength: %hu\n", iphdr->tot_len);
+	ft_printf("\tid: %hu\n", iphdr->id);
+	ft_printf("\tfragment offset: %hu\n", iphdr->frag_off);
+	ft_printf("\tttl: %hhu\n", iphdr->ttl);
 	ft_printf("\tprotocol: %hhu\n", iphdr->protocol);
 	ft_printf("\tsource addr: %hhu.%hhu.%hhu.%hhu\n",
 		((uint8_t *)&iphdr->saddr)[0], ((uint8_t *)&iphdr->saddr)[1],

@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:09 by pribault          #+#    #+#             */
-/*   Updated: 2018/05/29 23:34:28 by pribault         ###   ########.fr       */
+/*   Updated: 2018/05/30 21:18:56 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,24 @@ void	msg_recv(t_socket *socket, t_client *client, t_msg *msg)
 
 void	msg_send(t_socket *socket, t_client *client, t_msg *msg)
 {
-	(void)socket;
+	t_env	*env;
+
 	(void)client;
 	(void)msg;
-	ft_printf("message sended\n");
+	env = socket_get_data(socket);
+	if (env->opt & OPT_VERBOSE)
+		ft_printf("message sended\n");
+	free(msg->ptr);
+}
+
+void	msg_trash(t_socket *socket, t_client *client, t_msg *msg)
+{
+	t_env	*env;
+
+	(void)client;
+	(void)msg;
+	env = socket_get_data(socket);
+	if (env->opt & OPT_VERBOSE)
+		ft_printf("message trashed\n");
+	free(msg->ptr);
 }
