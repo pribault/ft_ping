@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:13 by pribault          #+#    #+#             */
-/*   Updated: 2018/05/30 09:18:16 by pribault         ###   ########.fr       */
+/*   Updated: 2018/05/30 09:29:02 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 # include "libft.h"
 # include "libsocket.h"
-# include <linux/ip.h>
-# include <linux/icmp.h>
+# include "ip.h"
+# include "icmp.h"
 # include <time.h>
 
 # define OPT_VERBOSE	BYTE(0)
