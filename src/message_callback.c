@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:09 by pribault          #+#    #+#             */
-/*   Updated: 2018/05/30 21:18:56 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/02 00:17:10 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 void	msg_recv(t_socket *socket, t_client *client, t_msg *msg)
 {
+	t_env	*env;
+
+	env = socket_get_data(socket);
+	if (env->opt & OPT_VERBOSE)
+		ft_printf("message received\n");
 	if (msg->size >= sizeof(struct iphdr))
 		treat_iphdr(socket_get_data(socket), client, msg->ptr, msg->size);
 	else
@@ -29,7 +34,6 @@ void	msg_send(t_socket *socket, t_client *client, t_msg *msg)
 	env = socket_get_data(socket);
 	if (env->opt & OPT_VERBOSE)
 		ft_printf("message sended\n");
-	free(msg->ptr);
 }
 
 void	msg_trash(t_socket *socket, t_client *client, t_msg *msg)

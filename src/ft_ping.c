@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:09 by pribault          #+#    #+#             */
-/*   Updated: 2018/05/30 22:56:08 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/02 00:36:36 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ t_error			g_errors[] = {
 	{ERROR_CANNOT_FIND_ADDRESS, "cannot find address %s", ERROR_EXIT},
 	{ERROR_ALLOCATION_2, "cannot allocate memory", 0},
 	{ERROR_CANNOT_SET_OPTION, "cannot set socket options", 0},
+	{ERROR_MEMORY_CORRUPTED, "memory corrupted", ERROR_EXIT},
 	{0, NULL, 0},
 };
 
@@ -52,11 +53,16 @@ void	init_env(t_env *env)
 {
 	env->packet_size = DEFAULT_PACKET_SIZE;
 	env->ttl = DEFAULT_TTL;
+	env->interval = DEFAULT_INTERVAL;
+	env->prev = (struct timeval){0, 0};
 	env->socket = socket_new();
+	env->icmp_seq = 1;
+	ft_vector_init(&env->messages, ALLOC_MALLOC, sizeof(t_data));
 	socket_attach_data(env->socket, env);
 	socket_set_callback(env->socket, SOCKET_CLIENT_ADD_CB, &client_add);
 	socket_set_callback(env->socket, SOCKET_CLIENT_DEL_CB, &client_add);
-	socket_set_callback(env->socket, SOCKET_CLIENT_EXCEPTION_CB, &client_excpt);
+	socket_set_callback(env->socket, SOCKET_CLIENT_EXCEPTION_CB,
+		&client_excpt);
 	socket_set_callback(env->socket, SOCKET_MSG_RECV_CB, &msg_recv);
 	socket_set_callback(env->socket, SOCKET_MSG_SEND_CB, &msg_send);
 	socket_set_callback(env->socket, SOCKET_MSG_TRASH_CB, &msg_trash);
@@ -77,6 +83,12 @@ int		main(int argc, char **argv)
 	if (!socket_connect(env.socket, (t_method){ICMP, IPV4}, env.address, NULL))
 		ft_error(2, ERROR_CANNOT_CONNECT, env.address);
 	while (1)
+	{
+		if (check_malloc() == MALLOC_CORRUPTED)
+			ft_error(2, ERROR_MEMORY_CORRUPTED, NULL);
+		if (env.client)
+			manage_ping_requests(&env);
 		socket_poll_events(env.socket, ALLOW_READ | ALLOW_WRITE);
+	}
 	return (0);
 }

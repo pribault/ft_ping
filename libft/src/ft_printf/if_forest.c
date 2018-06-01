@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/10 11:40:28 by pribault          #+#    #+#             */
-/*   Updated: 2017/01/13 17:38:06 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/02 01:33:24 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ int		if_forest_two(va_list va, t_param param, const char *format, int *i)
 		if_forest_long(va, param, &len, "01234567");
 	else if (format[*i] == 'D')
 		if_forest_long(va, param, &len, "0123456789");
+	else if (format[*i] == 'f')
+		if_forest_float(va, param, &len);
 	else if (format[*i])
 		len += print_wchar(format[*i]);
 	else

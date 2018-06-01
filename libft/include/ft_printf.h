@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/10 12:38:30 by pribault          #+#    #+#             */
-/*   Updated: 2017/07/19 13:42:19 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/02 01:34:58 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void			if_forest_string(va_list v, t_param p, int *l, int t);
 void			if_forest_char(va_list v, t_param p, int *l, int state);
 void			if_forest_pointer(va_list va, t_param param, int *len);
 void			if_forest_long(va_list va, t_param param, int *len, char *base);
+void			if_forest_float(va_list va, t_param p, int *len);
 
 int				print_params(t_param *p, int l, char c, int state);
 

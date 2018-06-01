@@ -4,7 +4,8 @@ SRC =	char.c ft_printf.c\
 		if_forest.c long.c\
 		number.c other.c\
 		params.c pointer.c\
-		string.c unsigned.c
+		string.c unsigned.c\
+		float.c
 DIR = ft_printf
 SRC_DIR = src
 OBJ_DIR = .obj

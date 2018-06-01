@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/18 10:26:20 by pribault          #+#    #+#             */
-/*   Updated: 2018/05/30 22:40:40 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/02 01:12:44 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 */
 
 #include "libsocket.h"
+#include <errno.h>
 
 static int	iter_on_addresses(t_socket *socket, t_client *client,
 			struct addrinfo *result)

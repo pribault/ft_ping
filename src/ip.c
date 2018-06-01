@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 21:17:12 by pribault          #+#    #+#             */
-/*   Updated: 2018/05/30 22:19:05 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/02 01:28:58 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ void	debug_iphdr(struct iphdr *iphdr)
 void	treat_iphdr(t_env *env, t_client *client,
 		struct iphdr *iphdr, size_t size)
 {
-	// endian_iphdr(iphdr);
 	if (iphdr->ihl * 4 > size)
 		return (ft_error(2, ERROR_INVALID_IHL, 0));
 	if (env->opt & OPT_VERBOSE)
@@ -64,7 +63,7 @@ void	treat_iphdr(t_env *env, t_client *client,
 		if (iphdr->ihl * 4 + sizeof(struct icmphdr) > size)
 			return (ft_error(2, ERROR_PACKET_TOO_SMALL, (void *)size));
 		else
-			treat_icmphdr(env, client, (void *)iphdr + iphdr->ihl * 4,
+			treat_icmphdr(env, iphdr, (void *)iphdr + iphdr->ihl * 4,
 				size - iphdr->ihl * 4);
 	}
 	else
