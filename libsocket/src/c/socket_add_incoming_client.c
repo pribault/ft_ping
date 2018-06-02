@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/18 10:57:49 by pribault          #+#    #+#             */
-/*   Updated: 2018/04/28 15:05:23 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/02 08:48:46 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void	socket_add_incoming_client(t_socket *socket, int *n_evts)
 		(client.fd = accept(socket->sockfd, (void*)&client.addr,
 		&client.addr.len)) < 0)
 		return ;
-	if ((host = gethostbyaddr(&client.addr.addr, client.addr.len,
+	if ((host = gethostbyaddr(
+		&((struct sockaddr_in *)&client.addr.addr)->sin_addr, client.addr.len,
 		socket->domain)))
 		client.addr.str = ft_strdup(host->h_name);
 	client.write_type = WRITE_BY_ADDR;

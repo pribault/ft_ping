@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 22:40:41 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/02 01:32:52 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/02 08:54:03 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,10 @@ void	treat_icmphdr(t_env *env, struct iphdr *iphdr,
 	if ((idx = get_index(&env->messages, icmphdr, size)) != (size_t)-1)
 	{
 		data = ft_vector_get(&env->messages, idx);
-		ft_printf("%lu bytes from %s (%s): ", size,
-			gethostbyaddr(&iphdr->saddr, 4, IPV4)->h_name,
+		ft_printf("%lu bytes from %s (%s): ", size, env->client->addr.str,
 			inet_ntop(IPV4, &iphdr->saddr, buffer, sizeof(buffer)));
-		ft_printf("icmp_seq=%lu ttl=%hhu time=%.2f ms\n", data->seq,
-			iphdr->ttl,
+		ft_printf("icmp_seq=%lu ttl=%hhu time=%.2f ms\n",
+			data->seq, iphdr->ttl,
 			((float)(now.tv_sec - data->timestamp.tv_sec) * 1000) +
 			((float)(now.tv_usec - data->timestamp.tv_usec) / 1000));
 		ft_vector_del_one(&env->messages, idx);

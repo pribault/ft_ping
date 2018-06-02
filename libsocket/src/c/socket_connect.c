@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/18 10:26:20 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/02 01:12:44 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/02 08:53:23 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 static int	iter_on_addresses(t_socket *socket, t_client *client,
 			struct addrinfo *result)
 {
+	struct hostent	*host;
 	struct addrinfo	*addr;
 
 	addr = result;
@@ -48,6 +49,9 @@ static int	iter_on_addresses(t_socket *socket, t_client *client,
 			ft_memcpy(&client->addr, addr->ai_addr, addr->ai_addrlen);
 			client->addr.len = addr->ai_addrlen;
 			client->write_type = WRITE_BY_ADDR;
+			if ((host = gethostbyaddr(&((struct sockaddr_in *)addr->ai_addr)
+				->sin_addr, client->addr.len, addr->ai_family)))
+				client->addr.str = ft_strdup(host->h_name);
 			ft_vector_add(&socket->clients, client);
 			if (socket->client_add)
 				socket->client_add(socket, ft_vector_get(&socket->clients,
