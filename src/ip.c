@@ -46,8 +46,7 @@ void	debug_iphdr(struct iphdr *iphdr)
 	ft_printf("\tsum found: %hu\n", compute_sum(iphdr, iphdr->ihl * 2));
 }
 
-void	treat_iphdr(t_env *env, t_client *client,
-		struct iphdr *iphdr, size_t size)
+void	treat_iphdr(t_env *env, struct iphdr *iphdr, size_t size)
 {
 	if (iphdr->ihl * 4 > size)
 		return (ft_error(2, ERROR_INVALID_IHL, 0));

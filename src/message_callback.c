@@ -16,11 +16,12 @@ void	msg_recv(t_socket *socket, t_client *client, t_msg *msg)
 {
 	t_env	*env;
 
+	(void)client;
 	env = socket_get_data(socket);
 	if (env->opt & OPT_VERBOSE)
 		ft_printf("message received\n");
 	if (msg->size >= sizeof(struct iphdr))
-		treat_iphdr(socket_get_data(socket), client, msg->ptr, msg->size);
+		treat_iphdr(socket_get_data(socket), msg->ptr, msg->size);
 	else
 		ft_error(2, ERROR_PACKET_TOO_SMALL, (void *)msg->size);
 }

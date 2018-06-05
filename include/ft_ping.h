@@ -68,6 +68,13 @@ typedef struct		s_env
 	uint8_t			opt;
 }					t_env;
 
+typedef struct		s_icmp_hdlr
+{
+	uint8_t			type;
+	void			(*function)(t_env *, struct iphdr *, struct icmphdr *,
+					size_t);
+}					t_icmp_hdlr;
+
 void				default_getter(char *s, t_env *env);
 void				get_verbose(t_env *env, char **args, int n);
 
@@ -82,8 +89,8 @@ void				endian(void *ptr, size_t size);
 void				endian_iphdr(struct iphdr *iphdr);
 
 __sum16				compute_sum(void *ptr, size_t size);
-void				treat_iphdr(t_env *env, t_client *client,
-					struct iphdr *iphdr, size_t size);
+void				treat_iphdr(t_env *env, struct iphdr *iphdr,
+					size_t size);
 void				treat_icmphdr(t_env *env, struct iphdr *iphdr,
 					struct icmphdr *icmphdr, size_t size);
 void				debug_iphdr(struct iphdr *iphdr);

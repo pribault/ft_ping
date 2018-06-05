@@ -24,7 +24,9 @@ char	*get_client_addr(t_client *client)
 
 void	client_add(t_socket *socket, t_client *client)
 {
-	t_env		*env;
+	struct addrinfo	hints;
+	struct addrinfo	*result;
+	t_env			*env;
 
 	env = socket_get_data(socket);
 	if (client_get_fd(client) > 2)
@@ -32,6 +34,18 @@ void	client_add(t_socket *socket, t_client *client)
 		ft_printf("FT_PING %s (%s) %lu(%lu) bytes of data.\n",
 			env->address, get_client_addr(client), env->packet_size,
 			env->packet_size + sizeof(struct iphdr) + sizeof(struct icmphdr));
+		ft_bzero(&hints, sizeof(struct addrinfo));
+		hints.ai_socktype = ICMP;
+		if (getaddrinfo(env->address, NULL, &hints, &result) != 0 ||
+			!result || !result->ai_addr)
+		{
+			ft_error(2, ERROR_CANNOT_CONNECT, env->address);
+			return (socket_remove_client(socket, client));
+		}
+		ft_memcpy(&client->addr, result->ai_addr, result->ai_addrlen);
+		client->addr.len = result->ai_addrlen;
+		client->write_type = WRITE_BY_ADDR;
+		freeaddrinfo(result);
 		env->client = client;
 	}
 }

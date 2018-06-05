@@ -39,6 +39,24 @@ t_error			g_errors[] = {
 	{0, NULL, 0},
 };
 
+#include <errno.h>
+
+int		create_icmp_socket(t_socket *sock)
+{
+	int				fd;
+	int				n;
+
+	n = 1;
+	if ((fd = socket(IPV4, ICMP, IPPROTO_ICMP)) == -1 ||
+		setsockopt(fd, IPPROTO_IP, IP_HDRINCL, &n, sizeof(int)) == -1)
+	{
+		ft_error(2, ERROR_CANNOT_CREATE_SOCKET, NULL);
+		return (0);
+	}
+	socket_add_client_by_fd(sock, fd);
+	return (1);
+}
+
 void	buffer_full(t_socket *socket)
 {
 	t_env	*env;
@@ -80,7 +98,7 @@ int		main(int argc, char **argv)
 		(t_long_flag *)&g_long_flags, (void *)&default_getter), &env);
 	if (!env.address)
 		ft_error(2, ERROR_NO_ADDRESS, NULL);
-	if (!socket_connect(env.socket, (t_method){ICMP, IPV4}, env.address, NULL))
+	if (!create_icmp_socket(env.socket))
 		ft_error(2, ERROR_CANNOT_CONNECT, env.address);
 	while (1)
 	{
