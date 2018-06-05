@@ -6,34 +6,11 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 21:04:29 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/02 00:37:22 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/06 00:05:48 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
-
-/*
-struct iphdr {
-#if defined(__LITTLE_ENDIAN_BITFIELD)
-	__u8	ihl:4,
-		version:4;
-#elif defined (__BIG_ENDIAN_BITFIELD)
-	__u8	version:4,
-  		ihl:4;
-#else
-#error	"Please fix <asm/byteorder.h>"
-#endif
-	__u8	tos;
-	__be16	tot_len;
-	__be16	id;
-	__be16	frag_off;
-	__u8	ttl;
-	__u8	protocol;
-	__sum16	check;
-	__be32	saddr;
-	__be32	daddr;
-};
-*/
 
 void	fill_ip_header(t_env *env, t_client *client, struct iphdr *iphdr)
 {

@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 22:40:41 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/02 08:54:03 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/06 00:01:51 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ void	treat_icmphdr(t_env *env, struct iphdr *iphdr,
 	if (env->opt & OPT_VERBOSE)
 		debug_icmp(icmphdr, size);
 	if (compute_sum(icmphdr, size / 2))
-		return (ft_error(2, ERROR_INVALID_CHECKSUM, NULL));
+		return ((env->opt & OPT_VERBOSE) ?
+			ft_error(2, ERROR_INVALID_CHECKSUM, NULL) : (void)0);
 	i = (size_t)-1;
 	while (++i < sizeof(g_hdlrs) / sizeof(t_icmp_hdlr))
 		if (icmphdr->type == g_hdlrs[i].type)
