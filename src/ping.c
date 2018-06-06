@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 21:04:29 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/06 00:05:48 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/06 23:29:00 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	fill_ip_header(t_env *env, t_client *client, struct iphdr *iphdr)
 	ft_memcpy(&iphdr->daddr,
 		&((struct sockaddr_in *)&client->addr.addr)->sin_addr, 4);
 	endian_iphdr(iphdr);
-	iphdr->check = compute_sum(iphdr, 10);
+	iphdr->check = compute_sum(iphdr, sizeof(struct iphdr));
 	if (env->opt & OPT_VERBOSE)
 		debug_iphdr(iphdr);
 }
@@ -37,7 +37,7 @@ void	fill_icmp_header(t_env *env, struct icmphdr *icmphdr)
 	icmphdr->un.echo.id = getpid();
 	icmphdr->un.echo.sequence = env->icmp_seq;
 	icmphdr->checksum = compute_sum(icmphdr, (sizeof(struct icmphdr) +
-		env->packet_size) / 2);
+		env->packet_size));
 	icmphdr->checksum = (icmphdr->checksum << 8) | (icmphdr->checksum >> 8);
 	if (env->opt & OPT_VERBOSE)
 		debug_icmp(icmphdr, sizeof(struct icmphdr) +

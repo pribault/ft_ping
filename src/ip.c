@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 21:17:12 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/06 00:04:29 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/06 23:29:18 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,17 @@
 __sum16	compute_sum(void *ptr, size_t size)
 {
 	uint32_t	sum;
+	size_t		words;
 	size_t		i;
 
 	sum = 0;
 	i = (size_t)-1;
-	while (++i < size)
+	words = size / 2;
+	while (++i < words)
 		sum += (((((__sum16 *)ptr)[i] & 0xff00) >> 8) +
 			((((__sum16 *)ptr)[i] & 0xff) << 8));
+	if (size % 2)
+		sum += *(uint8_t *)(ptr + size - 1) << 8;
 	return (~((sum & 0xffff) + ((sum & 0xffff0000) >> 16)));
 }
 
@@ -43,7 +47,7 @@ void	debug_iphdr(struct iphdr *iphdr)
 	ft_printf("\tdest addr: %hhu.%hhu.%hhu.%hhu\n",
 		((uint8_t *)&iphdr->daddr)[0], ((uint8_t *)&iphdr->daddr)[1],
 		((uint8_t *)&iphdr->daddr)[2], ((uint8_t *)&iphdr->daddr)[3]);
-	ft_printf("\tsum found: %hu\n", compute_sum(iphdr, iphdr->ihl * 2));
+	ft_printf("\tsum found: %hu\n", compute_sum(iphdr, iphdr->ihl * 4));
 }
 
 void	treat_iphdr(t_env *env, struct iphdr *iphdr, size_t size)
@@ -53,7 +57,7 @@ void	treat_iphdr(t_env *env, struct iphdr *iphdr, size_t size)
 			(void)0);
 	if (env->opt & OPT_VERBOSE)
 		debug_iphdr(iphdr);
-	if (compute_sum(iphdr, iphdr->ihl * 2))
+	if (compute_sum(iphdr, iphdr->ihl * 4))
 		return ((env->opt & OPT_VERBOSE) ? ft_error(2, ERROR_INVALID_CHECKSUM,
 			0) : (void)0);
 	if (iphdr->protocol == IPV4_PROTOCOL_ICMP)

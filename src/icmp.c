@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 22:40:41 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/06 00:01:51 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/06 23:22:33 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	debug_icmp(struct icmphdr *icmphdr, size_t size)
 	ft_printf("\tcode: %u\n", icmphdr->code);
 	ft_printf("\tchecksum: %hu\n", icmphdr->checksum);
 	ft_printf("\tsum found: %hu\n", compute_sum(icmphdr,
-		size / 2));
+		size));
 	ft_memdump(icmphdr, size);
 }
 
@@ -61,8 +61,9 @@ void	icmp_echo_reply(t_env *env, struct iphdr *iphdr,
 			hostname[0] = '\0';
 		ft_printf("%lu bytes from %s (%s): ", size, &hostname,
 			inet_ntop(IPV4, &iphdr->saddr, buffer, sizeof(buffer)));
-		ft_printf("icmp_seq=%lu ttl=%hhu time=%.2f ms\n",
-			data->seq, iphdr->ttl,
+		ft_printf("icmp_seq=%lu ttl=%hhu", data->seq, iphdr->ttl);
+		ft_printf((size >= sizeof(struct icmphdr) + sizeof(struct timeval)) ?
+			" time=%.2f ms\n" : "\n",
 			((float)(now.tv_sec - data->timestamp.tv_sec) * 1000) +
 			((float)(now.tv_usec - data->timestamp.tv_usec) / 1000));
 		ft_vector_del_one(&env->messages, idx);
@@ -111,7 +112,7 @@ void	treat_icmphdr(t_env *env, struct iphdr *iphdr,
 
 	if (env->opt & OPT_VERBOSE)
 		debug_icmp(icmphdr, size);
-	if (compute_sum(icmphdr, size / 2))
+	if (compute_sum(icmphdr, size))
 		return ((env->opt & OPT_VERBOSE) ?
 			ft_error(2, ERROR_INVALID_CHECKSUM, NULL) : (void)0);
 	i = (size_t)-1;
