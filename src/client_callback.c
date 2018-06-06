@@ -31,9 +31,6 @@ void	client_add(t_socket *socket, t_client *client)
 	env = socket_get_data(socket);
 	if (client_get_fd(client) > 2)
 	{
-		ft_printf("FT_PING %s (%s) %lu(%lu) bytes of data.\n",
-			env->address, get_client_addr(client), env->packet_size,
-			env->packet_size + sizeof(struct iphdr) + sizeof(struct icmphdr));
 		ft_bzero(&hints, sizeof(struct addrinfo));
 		hints.ai_socktype = ICMP;
 		if (getaddrinfo(env->address, NULL, &hints, &result) != 0 ||
@@ -47,6 +44,9 @@ void	client_add(t_socket *socket, t_client *client)
 		client->write_type = WRITE_BY_ADDR;
 		freeaddrinfo(result);
 		env->client = client;
+		ft_printf("FT_PING %s (%s) %lu(%lu) bytes of data.\n",
+			env->address, get_client_addr(client), env->packet_size,
+			env->packet_size + sizeof(struct iphdr) + sizeof(struct icmphdr));
 	}
 }
 

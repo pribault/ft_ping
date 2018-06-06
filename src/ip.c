@@ -54,11 +54,8 @@ void	treat_iphdr(t_env *env, struct iphdr *iphdr, size_t size)
 	if (env->opt & OPT_VERBOSE)
 		debug_iphdr(iphdr);
 	if (compute_sum(iphdr, iphdr->ihl * 2))
-	{
-		ft_memdump(iphdr, sizeof(struct iphdr));
 		return ((env->opt & OPT_VERBOSE) ? ft_error(2, ERROR_INVALID_CHECKSUM,
 			0) : (void)0);
-	}
 	if (iphdr->protocol == IPV4_PROTOCOL_ICMP)
 	{
 		if (iphdr->ihl * 4 + sizeof(struct icmphdr) > size)

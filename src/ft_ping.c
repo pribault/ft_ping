@@ -29,6 +29,7 @@ t_error			g_errors[] = {
 		0},
 	{ERROR_INVALID_CHECKSUM, "invalid packet checksum", 0},
 	{ERROR_INVALID_IHL, "invalid ihl", 0},
+	{ERROR_INVALID_DEST_UNREACH, "invalid dest unreach icmp packet", 0},
 	{ERROR_PROTOCOL_NOT_HANDLED, "protocol %u not handled", 0},
 	{ERROR_ADDRESS_SET, "error already set to %s", 0},
 	{ERROR_NO_ADDRESS, "no address set", ERROR_EXIT},

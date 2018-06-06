@@ -34,6 +34,8 @@ void	fill_ip_header(t_env *env, t_client *client, struct iphdr *iphdr)
 void	fill_icmp_header(t_env *env, struct icmphdr *icmphdr)
 {
 	icmphdr->type = ICMP_ECHO;
+	icmphdr->un.echo.id = getpid();
+	icmphdr->un.echo.sequence = env->icmp_seq;
 	icmphdr->checksum = compute_sum(icmphdr, (sizeof(struct icmphdr) +
 		env->packet_size) / 2);
 	icmphdr->checksum = (icmphdr->checksum << 8) | (icmphdr->checksum >> 8);
@@ -47,7 +49,7 @@ void	fill_queue(void *queue, size_t size, struct timeval *now)
 	size_t	i;
 	uint8_t	c;
 
-	c = 0x10;
+	c = 0x20;
 	if (size >= sizeof(struct timeval))
 	{
 		i = sizeof(struct timeval);
