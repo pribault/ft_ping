@@ -33,5 +33,5 @@ int	ft_isfloat(char *s)
 		}
 		i++;
 	}
-	return (boolean);
+	return (FT_TRUE);
 }

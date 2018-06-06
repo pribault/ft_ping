@@ -19,6 +19,9 @@ t_short_flag	g_short_flags[] = {
 
 t_long_flag		g_long_flags[] = {
 	{"verbose", 0, {0}, (void *)&get_verbose},
+	{"ttl", 1, {PARAM_UNSIGNED}, (void *)&get_ttl},
+	{"interval", 1, {PARAM_FLOAT}, (void *)&get_interval},
+	{"packetsize", 1, {PARAM_UNSIGNED}, (void *)&get_packet_size},
 	{NULL, 0, {0}, NULL}
 };
 
@@ -37,6 +40,9 @@ t_error			g_errors[] = {
 	{ERROR_ALLOCATION_2, "cannot allocate memory", 0},
 	{ERROR_CANNOT_SET_OPTION, "cannot set socket options", 0},
 	{ERROR_MEMORY_CORRUPTED, "memory corrupted", ERROR_EXIT},
+	{ERROR_MINIMAL_INTERVAL,
+		"cannot flood; mininal interval, allowed for user, is 200ms",
+		ERROR_EXIT},
 	{0, NULL, 0},
 };
 

@@ -25,3 +25,23 @@ void	get_verbose(t_env *env, char **args, int n)
 	(void)n;
 	env->opt ^= OPT_VERBOSE;
 }
+
+void	get_ttl(t_env *env, char **args, int n)
+{
+	(void)n;
+	env->ttl = ft_atou(args[0]);
+}
+
+void	get_interval(t_env *env, char **args, int n)
+{
+	(void)n;
+	env->interval = ft_atof(args[0]) * 1000000;
+	if (env->interval < 200000 && getuid())
+		ft_error(2, ERROR_MINIMAL_INTERVAL, NULL);
+}
+
+void	get_packet_size(t_env *env, char **args, int n)
+{
+	(void)n;
+	env->packet_size = ft_atou(args[0]);
+}

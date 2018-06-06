@@ -19,7 +19,7 @@ SRC_DIR =	src
 INC_DIR =	include
 
 SRC =	ft_ping.c client_callback.c message_callback.c\
-		flags.c endian.c ip.c icmp.c ping.c
+		flags.c endian.c ip.c icmp.c ping.c icmp_2.c
 OBJ =	$(sort $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC)))
 INC =	ft_ping.h ip.h icmp.h
 

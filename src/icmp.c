@@ -23,7 +23,7 @@ void	debug_icmp(struct icmphdr *icmphdr, size_t size)
 	ft_memdump(icmphdr, size);
 }
 
-size_t	get_index(t_vector *messages, void *ptr, size_t size)
+size_t	get_index(t_vector *messages, struct icmphdr *ptr, size_t size)
 {
 	t_data	*data;
 	size_t	i;
@@ -32,9 +32,11 @@ size_t	get_index(t_vector *messages, void *ptr, size_t size)
 	while (++i < messages->n)
 	{
 		data = ft_vector_get(messages, i);
-		if (data->msg.size - sizeof(struct iphdr) == size &&
+		if (ptr->un.echo.id == ((struct icmphdr *)(data->msg.ptr +
+			sizeof(struct iphdr)))->un.echo.id &&
+			data->msg.size - sizeof(struct iphdr) == size &&
 			!ft_memcmp(data->msg.ptr + sizeof(struct iphdr) +
-				sizeof(struct icmphdr), ptr + sizeof(struct icmphdr),
+				sizeof(struct icmphdr), (void *)ptr + sizeof(struct icmphdr),
 				size - sizeof(struct icmphdr)))
 			return (i);
 	}
@@ -84,10 +86,9 @@ void	icmp_dest_unreach(t_env *env, struct iphdr *iphdr,
 	{
 		data = ft_vector_get(&env->messages, idx);
 		if (size >= sizeof(struct iphdr) + sizeof(struct icmphdr) &&
-			size <= data->msg.size + sizeof(struct icmphdr) &&
 			!ft_memcmp(data->msg.ptr + sizeof(struct iphdr),
 				(void*)icmphdr + sizeof(struct iphdr) + sizeof(struct icmphdr),
-				size - sizeof(struct iphdr) - sizeof(struct icmphdr)))
+				sizeof(struct icmphdr)))
 		{
 			ft_printf("From %s icmp_seq=%lu Destination Net Unreachable\n",
 				inet_ntop(IPV4, &iphdr->saddr, buffer, sizeof(buffer)),
@@ -99,7 +100,8 @@ void	icmp_dest_unreach(t_env *env, struct iphdr *iphdr,
 
 t_icmp_hdlr	g_hdlrs[] = {
 	{ICMP_ECHOREPLY, &icmp_echo_reply},
-	{ICMP_DEST_UNREACH, &icmp_dest_unreach}
+	{ICMP_DEST_UNREACH, &icmp_dest_unreach},
+	{ICMP_TIME_EXCEEDED, &icmp_time_exceeded}
 };
 
 void	treat_icmphdr(t_env *env, struct iphdr *iphdr,
