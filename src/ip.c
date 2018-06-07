@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 21:17:12 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/07 00:55:38 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/07 23:44:52 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,21 @@ void	debug_iphdr(struct iphdr *iphdr)
 	printf("\tsum found: %hu\n", compute_sum(iphdr, iphdr->ihl * 4));
 }
 
+/*
+**	this is badly indented, but forced to because of norminette <3
+*/
+
 void	treat_iphdr(struct iphdr *iphdr, size_t size)
 {
 	if (iphdr->ihl * 4 > size)
 		return ((g_e.opt & OPT_VERBOSE) ? ft_error(2, ERROR_INVALID_IHL, 0) :
 			(void)0);
-	if (g_e.opt & OPT_VERBOSE)
+		if (g_e.opt & OPT_VERBOSE)
 		debug_iphdr(iphdr);
 	if (compute_sum(iphdr, iphdr->ihl * 4))
 		return ((g_e.opt & OPT_VERBOSE) ? ft_error(2, ERROR_INVALID_CHECKSUM,
-			0) : (void)0);
-	if (iphdr->protocol == IPV4_PROTOCOL_ICMP)
+		0) : (void)0);
+		if (iphdr->protocol == IPV4_PROTOCOL_ICMP)
 	{
 		if (iphdr->ihl * 4 + sizeof(struct icmphdr) > size)
 			return ((g_e.opt & OPT_VERBOSE) ? ft_error(2,
@@ -70,6 +74,7 @@ void	treat_iphdr(struct iphdr *iphdr, size_t size)
 				size - iphdr->ihl * 4);
 	}
 	else
-		return ((g_e.opt & OPT_VERBOSE) ? ft_error(2, ERROR_PROTOCOL_NOT_HANDLED,
-			(void *)(size_t)iphdr->protocol) : (void)0);
+		return ((g_e.opt & OPT_VERBOSE) ? ft_error(2,
+			ERROR_PROTOCOL_NOT_HANDLED, (void *)(size_t)iphdr->protocol) :
+				(void)0);
 }

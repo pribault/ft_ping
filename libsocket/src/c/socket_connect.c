@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/18 10:26:20 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/02 08:53:23 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/07 23:31:42 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@
 */
 
 #include "libsocket.h"
-#include <errno.h>
 
 static int	iter_on_addresses(t_socket *socket, t_client *client,
 			struct addrinfo *result)
@@ -64,8 +63,6 @@ static int	iter_on_addresses(t_socket *socket, t_client *client,
 	freeaddrinfo(result);
 	return (0);
 }
-
-#include <errno.h>
 
 int			socket_connect(t_socket *msocket, t_method method, char *address,
 			char *port)

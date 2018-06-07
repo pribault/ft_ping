@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 23:54:57 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/07 00:02:46 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/07 23:46:27 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ void	set_timeout(struct timeval *timeout, struct timeval *now)
 		timeout->tv_usec))
 		*timeout = (struct timeval){(g_e.timeout - diff_send) / 1000000,
 			(g_e.timeout - diff_send) % 1000000};
-	if (g_e.timeout - diff_recv < (size_t)(timeout->tv_sec * 1000000 + timeout->tv_usec))
-		*timeout = (struct timeval){(g_e.timeout - diff_recv) / 1000000,
-			(g_e.timeout - diff_recv) % 1000000};
+	if (g_e.timeout - diff_recv < (size_t)(timeout->tv_sec * 1000000 +
+		timeout->tv_usec))
+		*timeout = (struct timeval){(g_e.timeout -
+		diff_recv) / 1000000, (g_e.timeout - diff_recv) % 1000000};
 }

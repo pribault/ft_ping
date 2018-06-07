@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 22:40:41 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/07 09:22:36 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/07 23:44:25 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	icmp_dest_unreach(struct iphdr *iphdr,
 	if (size < sizeof(struct icmphdr) + sizeof(struct iphdr) + 8)
 		return ((g_e.opt & OPT_VERBOSE) ? ft_error(2,
 			ERROR_INVALID_DEST_UNREACH, NULL) : (void)0);
-	gettimeofday(&now, NULL);
+		gettimeofday(&now, NULL);
 	printf("From %s icmp_seq=%hu Destination Net Unreachable\n",
 		inet_ntop(IPV4, &iphdr->saddr, buffer, sizeof(buffer)),
 		((struct icmphdr *)((void*)&icmphdr[1] +
@@ -95,7 +95,7 @@ void	treat_icmphdr(struct iphdr *iphdr,
 	if (compute_sum(icmphdr, size))
 		return ((g_e.opt & OPT_VERBOSE) ?
 			ft_error(2, ERROR_INVALID_CHECKSUM, NULL) : (void)0);
-	i = (size_t)-1;
+		i = (size_t)-1;
 	if (!g_e.start.tv_sec && !g_e.start.tv_usec)
 		gettimeofday(&g_e.start, NULL);
 	gettimeofday(&g_e.prev_recv, NULL);

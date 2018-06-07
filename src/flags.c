@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:09 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/07 00:58:23 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/07 23:42:23 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	get_flags(int argc, char **argv)
 		{'v', (void *)&get_verbose},
 		{'\0', NULL}
 	};
-	static t_long_flag		long_flags[] = {
+	static t_long_flag	long_flags[] = {
 		{"help", 0, {0}, (void *)&print_usage},
 		{"verbose", 0, {0}, (void *)&get_verbose},
 		{"ttl", 1, {PARAM_UNSIGNED}, (void *)&get_ttl},

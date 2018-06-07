@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:09 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/07 09:12:21 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/07 23:38:29 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,58 @@
 
 t_env	g_e;
 
+t_error	g_errors[] = {
+	{ERROR_CANNOT_CONNECT, "cannot connect to %s", 0},
+	{ERROR_CANNOT_CREATE_SOCKET, "cannot create socket", 0},
+	{ERROR_PACKET_TOO_SMALL,
+		"packet received too small, ignoring (%lu bytes)", 0},
+	{ERROR_INVALID_CHECKSUM, "invalid packet checksum", 0},
+	{ERROR_INVALID_IHL, "invalid ihl", 0},
+	{ERROR_INVALID_DEST_UNREACH, "invalid dest unreach icmp packet", 0},
+	{ERROR_PROTOCOL_NOT_HANDLED, "protocol %u not handled", 0},
+	{ERROR_ADDRESS_SET, "error already set to %s", 0},
+	{ERROR_NO_ADDRESS, "no address set", ERROR_EXIT},
+	{ERROR_CANNOT_FIND_ADDRESS, "cannot find address %s", ERROR_EXIT},
+	{ERROR_ALLOCATION_2, "cannot allocate memory", 0},
+	{ERROR_CANNOT_SET_OPTION, "cannot set socket options", 0},
+	{ERROR_MEMORY_CORRUPTED, "memory corrupted", ERROR_EXIT},
+	{ERROR_MINIMAL_INTERVAL,
+		"cannot flood; mininal interval, allowed for user, is 200ms",
+		ERROR_EXIT},
+	{0, NULL, 0},
+};
+
+/*
+**	void	set_errors(void)
+**	{
+**		static t_error	errors[] = {
+**			{ERROR_CANNOT_CONNECT, "cannot connect to %s", 0},
+**			{ERROR_CANNOT_CREATE_SOCKET, "cannot create socket", 0},
+**			{ERROR_PACKET_TOO_SMALL,
+**			"packet received too small, ignoring (%lu bytes)", 0},
+**			{ERROR_INVALID_CHECKSUM, "invalid packet checksum", 0},
+**			{ERROR_INVALID_IHL, "invalid ihl", 0},
+**			{ERROR_INVALID_DEST_UNREACH, "invalid dest unreach icmp packet", 0},
+**			{ERROR_PROTOCOL_NOT_HANDLED, "protocol %u not handled", 0},
+**			{ERROR_ADDRESS_SET, "error already set to %s", 0},
+**			{ERROR_NO_ADDRESS, "no address set", ERROR_EXIT},
+**			{ERROR_CANNOT_FIND_ADDRESS, "cannot find address %s", ERROR_EXIT},
+**			{ERROR_ALLOCATION_2, "cannot allocate memory", 0},
+**			{ERROR_CANNOT_SET_OPTION, "cannot set socket options", 0},
+**			{ERROR_MEMORY_CORRUPTED, "memory corrupted", ERROR_EXIT},
+**			{ERROR_MINIMAL_INTERVAL,
+**				"cannot flood; mininal interval, allowed for user, is 200ms",
+**				ERROR_EXIT},
+**			{0, NULL, 0},
+**		};
+**
+**		ft_add_errors((t_error *)&errors);
+**	}
+*/
+
 void	set_errors(void)
 {
-	static t_error	errors[] = {
-		{ERROR_CANNOT_CONNECT, "cannot connect to %s", 0},
-		{ERROR_CANNOT_CREATE_SOCKET, "cannot create socket", 0},
-		{ERROR_PACKET_TOO_SMALL, "packet received too small, ignoring (%lu bytes)",
-			0},
-			{ERROR_INVALID_CHECKSUM, "invalid packet checksum", 0},
-		{ERROR_INVALID_IHL, "invalid ihl", 0},
-		{ERROR_INVALID_DEST_UNREACH, "invalid dest unreach icmp packet", 0},
-		{ERROR_PROTOCOL_NOT_HANDLED, "protocol %u not handled", 0},
-		{ERROR_ADDRESS_SET, "error already set to %s", 0},
-		{ERROR_NO_ADDRESS, "no address set", ERROR_EXIT},
-		{ERROR_CANNOT_FIND_ADDRESS, "cannot find address %s", ERROR_EXIT},
-		{ERROR_ALLOCATION_2, "cannot allocate memory", 0},
-		{ERROR_CANNOT_SET_OPTION, "cannot set socket options", 0},
-		{ERROR_MEMORY_CORRUPTED, "memory corrupted", ERROR_EXIT},
-		{ERROR_MINIMAL_INTERVAL,
-			"cannot flood; mininal interval, allowed for user, is 200ms",
-			ERROR_EXIT},
-		{0, NULL, 0},
-	};
-
-	ft_add_errors((t_error *)&errors);
+	ft_add_errors((t_error *)&g_errors);
 }
 
 int		create_icmp_socket(t_socket *sock)

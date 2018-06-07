@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 21:04:29 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/07 09:21:23 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/07 23:45:48 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	send_ping_request(t_client *client, struct timeval *timestamp)
 	g_e.prev_send = *timestamp;
 }
 
-void	manage_ping_requests()
+void	manage_ping_requests(void)
 {
 	struct timeval	timeout;
 	struct timeval	now;
