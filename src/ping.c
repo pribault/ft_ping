@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 21:04:29 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/07 23:45:48 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/08 00:38:27 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@ void	fill_ip_header(t_client *client, struct iphdr *iphdr)
 		&((struct sockaddr_in *)&client->addr.addr)->sin_addr, 4);
 	endian_iphdr(iphdr);
 	iphdr->check = compute_sum(iphdr, sizeof(struct iphdr));
-	if (g_e.opt & OPT_VERBOSE)
-		debug_iphdr(iphdr);
 }
 
 void	fill_icmp_header(struct icmphdr *icmphdr)
@@ -39,9 +37,6 @@ void	fill_icmp_header(struct icmphdr *icmphdr)
 	icmphdr->checksum = compute_sum(icmphdr, (sizeof(struct icmphdr) +
 		g_e.packet_size));
 	icmphdr->checksum = (icmphdr->checksum << 8) | (icmphdr->checksum >> 8);
-	if (g_e.opt & OPT_VERBOSE)
-		debug_icmp(icmphdr, sizeof(struct icmphdr) +
-			g_e.packet_size);
 }
 
 void	fill_queue(void *queue, size_t size, struct timeval *now)
