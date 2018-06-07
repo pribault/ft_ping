@@ -6,13 +6,14 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/07/07 09:58:06 by pribault          #+#    #+#             */
-/*   Updated: 2018/04/11 21:51:27 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/07 00:33:26 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "prototypes.h"
 
-t_env	g_env = {NULL,
+t_env	g_env = {
+	NULL,
 	NULL,
 	NULL,
 	PTHREAD_MUTEX_INITIALIZER,

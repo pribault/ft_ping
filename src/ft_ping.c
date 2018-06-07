@@ -6,11 +6,13 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:09 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/06 00:05:17 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/07 09:12:21 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
+
+t_env	g_e;
 
 t_short_flag	g_short_flags[] = {
 	{'v', (void *)&get_verbose},
@@ -46,8 +48,6 @@ t_error			g_errors[] = {
 	{0, NULL, 0},
 };
 
-#include <errno.h>
-
 int		create_icmp_socket(t_socket *sock)
 {
 	int				fd;
@@ -66,54 +66,53 @@ int		create_icmp_socket(t_socket *sock)
 
 void	buffer_full(t_socket *socket)
 {
-	t_env	*env;
-
-	env = socket_get_data(socket);
-	if (env->opt & OPT_VERBOSE)
+	if (g_e.opt & OPT_VERBOSE)
 		ft_printf("buffer full\n");
 	socket_poll_events(socket, ALLOW_WRITE);
 }
 
-void	init_env(t_env *env)
+void	init_env(void)
 {
-	env->packet_size = DEFAULT_PACKET_SIZE;
-	env->ttl = DEFAULT_TTL;
-	env->interval = DEFAULT_INTERVAL;
-	env->prev = (struct timeval){0, 0};
-	env->socket = socket_new();
-	env->icmp_seq = 1;
-	ft_vector_init(&env->messages, ALLOC_MALLOC, sizeof(t_data));
-	socket_attach_data(env->socket, env);
-	socket_set_callback(env->socket, SOCKET_CLIENT_ADD_CB, &client_add);
-	socket_set_callback(env->socket, SOCKET_CLIENT_DEL_CB, &client_add);
-	socket_set_callback(env->socket, SOCKET_CLIENT_EXCEPTION_CB,
+	g_e.packet_size = DEFAULT_PACKET_SIZE;
+	g_e.ttl = DEFAULT_TTL;
+	g_e.interval = DEFAULT_INTERVAL;
+	g_e.prev = (struct timeval){0, 0};
+	g_e.socket = socket_new();
+	g_e.icmp_seq = 1;
+	socket_set_callback(g_e.socket, SOCKET_CLIENT_ADD_CB, &client_add);
+	socket_set_callback(g_e.socket, SOCKET_CLIENT_DEL_CB, &client_add);
+	socket_set_callback(g_e.socket, SOCKET_CLIENT_EXCEPTION_CB,
 		&client_excpt);
-	socket_set_callback(env->socket, SOCKET_MSG_RECV_CB, &msg_recv);
-	socket_set_callback(env->socket, SOCKET_MSG_SEND_CB, &msg_send);
-	socket_set_callback(env->socket, SOCKET_MSG_TRASH_CB, &msg_trash);
-	socket_set_callback(env->socket, SOCKET_BUFFER_FULL_CB, &buffer_full);
+	socket_set_callback(g_e.socket, SOCKET_MSG_RECV_CB, &msg_recv);
+	socket_set_callback(g_e.socket, SOCKET_MSG_SEND_CB, &msg_send);
+	socket_set_callback(g_e.socket, SOCKET_MSG_TRASH_CB, &msg_trash);
+	socket_set_callback(g_e.socket, SOCKET_BUFFER_FULL_CB, &buffer_full);
+}
+
+void	set_signals(void)
+{
+	signal(SIGINT, &print_statistics);
 }
 
 int		main(int argc, char **argv)
 {
-	t_env	env;
-
-	ft_bzero(&env, sizeof(t_env));
+	set_signals();
+	ft_bzero(&g_e, sizeof(t_env));
 	ft_add_errors((t_error *)&g_errors);
-	init_env(&env);
+	init_env();
 	ft_get_flags(argc, argv, ft_get_flag_array((t_short_flag *)&g_short_flags,
-		(t_long_flag *)&g_long_flags, (void *)&default_getter), &env);
-	if (!env.address)
+		(t_long_flag *)&g_long_flags, (void *)&default_getter), &g_e);
+	if (!g_e.address)
 		ft_error(2, ERROR_NO_ADDRESS, NULL);
-	if (!create_icmp_socket(env.socket))
-		ft_error(2, ERROR_CANNOT_CONNECT, env.address);
+	if (!create_icmp_socket(g_e.socket))
+		ft_error(2, ERROR_CANNOT_CONNECT, g_e.address);
 	while (1)
 	{
 		if (check_malloc() == MALLOC_CORRUPTED)
 			ft_error(2, ERROR_MEMORY_CORRUPTED, NULL);
-		if (env.client)
-			manage_ping_requests(&env);
-		socket_poll_events(env.socket, ALLOW_READ | ALLOW_WRITE);
+		if (g_e.client)
+			manage_ping_requests();
+		socket_poll_events(g_e.socket, ALLOW_READ | ALLOW_WRITE);
 	}
 	return (0);
 }

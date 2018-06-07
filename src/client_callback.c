@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:09 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/02 00:35:28 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/07 00:51:51 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,38 +26,34 @@ void	client_add(t_socket *socket, t_client *client)
 {
 	struct addrinfo	hints;
 	struct addrinfo	*result;
-	t_env			*env;
 
-	env = socket_get_data(socket);
 	if (client_get_fd(client) > 2)
 	{
 		ft_bzero(&hints, sizeof(struct addrinfo));
 		hints.ai_socktype = ICMP;
-		if (getaddrinfo(env->address, NULL, &hints, &result) != 0 ||
+		if (getaddrinfo(g_e.address, NULL, &hints, &result) != 0 ||
 			!result || !result->ai_addr)
 		{
-			ft_error(2, ERROR_CANNOT_CONNECT, env->address);
+			ft_error(2, ERROR_CANNOT_CONNECT, g_e.address);
 			return (socket_remove_client(socket, client));
 		}
 		ft_memcpy(&client->addr, result->ai_addr, result->ai_addrlen);
 		client->addr.len = result->ai_addrlen;
 		client->write_type = WRITE_BY_ADDR;
 		freeaddrinfo(result);
-		env->client = client;
+		g_e.client = client;
 		ft_printf("FT_PING %s (%s) %lu(%lu) bytes of data.\n",
-			env->address, get_client_addr(client), env->packet_size,
-			env->packet_size + sizeof(struct iphdr) + sizeof(struct icmphdr));
+			g_e.address, get_client_addr(client), g_e.packet_size,
+			g_e.packet_size + sizeof(struct iphdr) + sizeof(struct icmphdr));
 	}
 }
 
 void	client_del(t_socket *socket, t_client *client)
 {
-	t_env	*env;
-
+	(void)socket;
 	ft_printf("client removed\n");
-	env = socket_get_data(socket);
-	if (client == env->client)
-		env->client = NULL;
+	if (client == g_e.client)
+		g_e.client = NULL;
 }
 
 void	client_excpt(t_socket *socket, t_client *client)

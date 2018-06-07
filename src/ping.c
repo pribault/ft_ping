@@ -6,42 +6,42 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/30 21:04:29 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/06 23:29:00 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/07 09:21:23 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 
-void	fill_ip_header(t_env *env, t_client *client, struct iphdr *iphdr)
+void	fill_ip_header(t_client *client, struct iphdr *iphdr)
 {
 	iphdr->ihl = 5;
 	iphdr->version = 4;
 	iphdr->tos = 0;
 	iphdr->tot_len = sizeof(struct iphdr) + sizeof(struct icmphdr) +
-	env->packet_size;
+	g_e.packet_size;
 	iphdr->id = 0;
 	iphdr->frag_off = 0;
-	iphdr->ttl = env->ttl;
+	iphdr->ttl = g_e.ttl;
 	iphdr->protocol = IPV4_PROTOCOL_ICMP;
 	ft_memcpy(&iphdr->daddr,
 		&((struct sockaddr_in *)&client->addr.addr)->sin_addr, 4);
 	endian_iphdr(iphdr);
 	iphdr->check = compute_sum(iphdr, sizeof(struct iphdr));
-	if (env->opt & OPT_VERBOSE)
+	if (g_e.opt & OPT_VERBOSE)
 		debug_iphdr(iphdr);
 }
 
-void	fill_icmp_header(t_env *env, struct icmphdr *icmphdr)
+void	fill_icmp_header(struct icmphdr *icmphdr)
 {
 	icmphdr->type = ICMP_ECHO;
 	icmphdr->un.echo.id = getpid();
-	icmphdr->un.echo.sequence = env->icmp_seq;
+	icmphdr->un.echo.sequence = g_e.icmp_seq;
 	icmphdr->checksum = compute_sum(icmphdr, (sizeof(struct icmphdr) +
-		env->packet_size));
+		g_e.packet_size));
 	icmphdr->checksum = (icmphdr->checksum << 8) | (icmphdr->checksum >> 8);
-	if (env->opt & OPT_VERBOSE)
+	if (g_e.opt & OPT_VERBOSE)
 		debug_icmp(icmphdr, sizeof(struct icmphdr) +
-			env->packet_size);
+			g_e.packet_size);
 }
 
 void	fill_queue(void *queue, size_t size, struct timeval *now)
@@ -61,45 +61,44 @@ void	fill_queue(void *queue, size_t size, struct timeval *now)
 		*(uint8_t *)(queue + i++) = c++;
 }
 
-void	send_ping_request(t_env *env, t_client *client)
+void	send_ping_request(t_client *client)
 {
-	t_data			data;
+	t_msg			msg;
+	struct timeval	timestamp;
 
-	gettimeofday(&data.timestamp, NULL);
-	data.msg.size = sizeof(struct iphdr) + sizeof(struct icmphdr) +
-	env->packet_size;
-	if (!(data.msg.ptr = malloc(data.msg.size)))
+	gettimeofday(&timestamp, NULL);
+	msg.size = sizeof(struct iphdr) + sizeof(struct icmphdr) +
+	g_e.packet_size;
+	if (!(msg.ptr = malloc(msg.size)))
 		return (ft_error(2, ERROR_ALLOCATION_2, NULL));
-	ft_bzero(data.msg.ptr, data.msg.size);
-	fill_ip_header(env, client, data.msg.ptr);
-	fill_queue(data.msg.ptr + sizeof(struct iphdr) + sizeof(struct icmphdr),
-		env->packet_size, &data.timestamp);
-	fill_icmp_header(env, data.msg.ptr + sizeof(struct iphdr));
-	data.seq = env->icmp_seq++;
-	socket_enqueue_write(env->socket, client, &data.msg);
-	ft_vector_add(&env->messages, &data);
+	ft_bzero(msg.ptr, msg.size);
+	fill_ip_header(client, msg.ptr);
+	fill_queue(msg.ptr + sizeof(struct iphdr) + sizeof(struct icmphdr),
+		g_e.packet_size, &timestamp);
+	fill_icmp_header(msg.ptr + sizeof(struct iphdr));
+	socket_enqueue_write(g_e.socket, client, &msg);
 }
 
-void	manage_ping_requests(t_env *env)
+void	manage_ping_requests()
 {
 	struct timeval	now;
 	size_t			diff;
 
 	gettimeofday(&now, NULL);
-	diff = (now.tv_sec - env->prev.tv_sec) * 1000000 +
-		(now.tv_usec - env->prev.tv_usec);
-	if ((!env->prev.tv_sec && !env->prev.tv_usec) ||
-		diff >= env->interval)
+	diff = (now.tv_sec - g_e.prev.tv_sec) * 1000000 +
+		(now.tv_usec - g_e.prev.tv_usec);
+	if ((!g_e.prev.tv_sec && !g_e.prev.tv_usec) ||
+		diff >= g_e.interval)
 	{
-		send_ping_request(env, env->client);
-		env->prev = now;
-		now.tv_sec = env->interval / 1000000;
-		now.tv_usec = env->interval % 1000000;
+		send_ping_request(g_e.client);
+		g_e.prev = now;
+		now.tv_sec = g_e.interval / 1000000;
+		now.tv_usec = g_e.interval % 1000000;
 	}
 	else
 	{
-		now.tv_sec = (env->interval - diff) / 1000000;
-		now.tv_usec = (env->interval - diff) % 1000000;
+		now.tv_sec = (g_e.interval - diff) / 1000000;
+		now.tv_usec = (g_e.interval - diff) % 1000000;
 	}
-	socket_set_timeout(env->socket, &now);
+	socket_set_timeout(g_e.socket, &now);
 }

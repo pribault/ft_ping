@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:13 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/02 01:23:31 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/07 09:11:58 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ typedef struct		s_env
 	t_socket		*socket;
 	char			*address;
 	t_client		*client;
-	t_vector		messages;
 	size_t			icmp_seq;
 	size_t			interval;
 	struct timeval	prev;
@@ -105,7 +104,7 @@ typedef struct		s_env
 typedef struct		s_icmp_hdlr
 {
 	uint8_t			type;
-	void			(*function)(t_env *, struct iphdr *, struct icmphdr *,
+	void			(*function)(struct iphdr *, struct icmphdr *,
 					size_t);
 }					t_icmp_hdlr;
 
@@ -148,9 +147,9 @@ void				endian_iphdr(struct iphdr *iphdr);
 */
 
 __sum16				compute_sum(void *ptr, size_t size);
-void				treat_iphdr(t_env *env, struct iphdr *iphdr,
+void				treat_iphdr(struct iphdr *iphdr,
 					size_t size);
-void				treat_icmphdr(t_env *env, struct iphdr *iphdr,
+void				treat_icmphdr(struct iphdr *iphdr,
 					struct icmphdr *icmphdr, size_t size);
 void				debug_iphdr(struct iphdr *iphdr);
 void				debug_icmp(struct icmphdr *icmphdr, size_t size);
@@ -159,24 +158,27 @@ void				debug_icmp(struct icmphdr *icmphdr, size_t size);
 **	ping functions
 */
 
-void				manage_ping_requests(t_env *env);
-void				send_ping_request(t_env *env, t_client *client);
+void				manage_ping_requests(void);
+void				send_ping_request(t_client *client);
 
 /*
 **	icmp functions
 */
 
-void				icmp_echo_reply(t_env *env, struct iphdr *iphdr,
+void				icmp_echo_reply(struct iphdr *iphdr,
 					struct icmphdr *icmphdr, size_t size);
-void				icmp_dest_unreach(t_env *env, struct iphdr *iphdr,
+void				icmp_dest_unreach(struct iphdr *iphdr,
 					struct icmphdr *icmphdr, size_t size);
-void				icmp_time_exceeded(t_env *env, struct iphdr *iphdr,
+void				icmp_time_exceeded(struct iphdr *iphdr,
 					struct icmphdr *icmphdr, size_t size);
 
 /*
 **	others
 */
 
+void				print_statistics(int signal);
 char				*get_client_addr(t_client *client);
+
+extern t_env	g_e;
 
 #endif

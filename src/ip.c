@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 21:17:12 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/06 23:29:18 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/07 00:55:38 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,26 +50,26 @@ void	debug_iphdr(struct iphdr *iphdr)
 	ft_printf("\tsum found: %hu\n", compute_sum(iphdr, iphdr->ihl * 4));
 }
 
-void	treat_iphdr(t_env *env, struct iphdr *iphdr, size_t size)
+void	treat_iphdr(struct iphdr *iphdr, size_t size)
 {
 	if (iphdr->ihl * 4 > size)
-		return ((env->opt & OPT_VERBOSE) ? ft_error(2, ERROR_INVALID_IHL, 0) :
+		return ((g_e.opt & OPT_VERBOSE) ? ft_error(2, ERROR_INVALID_IHL, 0) :
 			(void)0);
-	if (env->opt & OPT_VERBOSE)
+	if (g_e.opt & OPT_VERBOSE)
 		debug_iphdr(iphdr);
 	if (compute_sum(iphdr, iphdr->ihl * 4))
-		return ((env->opt & OPT_VERBOSE) ? ft_error(2, ERROR_INVALID_CHECKSUM,
+		return ((g_e.opt & OPT_VERBOSE) ? ft_error(2, ERROR_INVALID_CHECKSUM,
 			0) : (void)0);
 	if (iphdr->protocol == IPV4_PROTOCOL_ICMP)
 	{
 		if (iphdr->ihl * 4 + sizeof(struct icmphdr) > size)
-			return ((env->opt & OPT_VERBOSE) ? ft_error(2,
+			return ((g_e.opt & OPT_VERBOSE) ? ft_error(2,
 				ERROR_PACKET_TOO_SMALL, (void *)size) : (void)0);
 		else
-			treat_icmphdr(env, iphdr, (void *)iphdr + iphdr->ihl * 4,
+			treat_icmphdr(iphdr, (void *)iphdr + iphdr->ihl * 4,
 				size - iphdr->ihl * 4);
 	}
 	else
-		return ((env->opt & OPT_VERBOSE) ? ft_error(2, ERROR_PROTOCOL_NOT_HANDLED,
+		return ((g_e.opt & OPT_VERBOSE) ? ft_error(2, ERROR_PROTOCOL_NOT_HANDLED,
 			(void *)(size_t)iphdr->protocol) : (void)0);
 }
