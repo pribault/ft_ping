@@ -14,6 +14,31 @@
 
 void	print_statistics(int signal)
 {
-	ft_printf("statistics\n");
+	struct timeval	end;
+
+	(void)signal;
+	gettimeofday(&end, NULL);
+	printf("\n--- %s ft_ping statistics ---\n", g_e.address);
+	printf("%lu packets transmitted, %lu received, ", g_e.transmitted,
+		g_e.received);
+	if (g_e.received + g_e.lost != g_e.transmitted)
+		printf("+%lu errors, ", g_e.transmitted - g_e.lost - g_e.received);
+	if (g_e.transmitted)
+		printf("%lu%% packet loss, ", 100 - ((g_e.received * 100) /
+		g_e.transmitted));
+	printf("time %lums\n", (g_e.start.tv_sec || g_e.start.tv_usec) ?
+		(end.tv_sec - g_e.start.tv_sec) * 1000 +
+		(end.tv_usec - g_e.start.tv_usec) / 1000 : 0);
+	if (g_e.received)
+		printf("rtt min/avg/max/mdev = %.3f/%.3f/%.3f/%.3lf ms\n", g_e.min,
+		g_e.avg, g_e.max, sqrt(g_e.sum2 / g_e.received -
+			(g_e.sum / g_e.received) * (g_e.sum / g_e.received)));
+	else
+		printf("\n");
 	exit(0);
+}
+
+void	set_signals(void)
+{
+	signal(SIGINT, &print_statistics);
 }

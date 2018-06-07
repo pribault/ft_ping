@@ -25,6 +25,8 @@
 # include "icmp.h"
 # include <sys/time.h>
 # include <arpa/inet.h>
+# include <stdio.h>
+# include <math.h>
 
 /*
 ***************
@@ -45,6 +47,7 @@
 # define DEFAULT_PACKET_SIZE	56
 # define DEFAULT_TTL			50
 # define DEFAULT_INTERVAL		1000000
+# define DEFAULT_TIMEOUT		10000000
 
 /*
 *************
@@ -95,10 +98,22 @@ typedef struct		s_env
 	t_client		*client;
 	size_t			icmp_seq;
 	size_t			interval;
-	struct timeval	prev;
+	struct timeval	start;
+	struct timeval	prev_send;
+	struct timeval	prev_recv;
 	size_t			packet_size;
+	size_t			count;
+	size_t			timeout;
 	uint8_t			ttl;
 	uint8_t			opt;
+	size_t			transmitted;
+	size_t			received;
+	size_t			lost;
+	double			min;
+	double			max;
+	double			avg;
+	double			sum;
+	double			sum2;
 }					t_env;
 
 typedef struct		s_icmp_hdlr
@@ -118,11 +133,15 @@ typedef struct		s_icmp_hdlr
 **	flag getters
 */
 
+void				get_flags(int argc, char **argv);
 void				default_getter(char *s, t_env *env);
 void				get_verbose(t_env *env, char **args, int n);
 void				get_ttl(t_env *env, char **args, int n);
 void				get_interval(t_env *env, char **args, int n);
 void				get_packet_size(t_env *env, char **args, int n);
+void				get_count(t_env *env, char **args, int n);
+void				get_timeout(t_env *env, char **args, int n);
+void				print_usage(void);
 
 /*
 **	libsocket callbacks
@@ -159,7 +178,8 @@ void				debug_icmp(struct icmphdr *icmphdr, size_t size);
 */
 
 void				manage_ping_requests(void);
-void				send_ping_request(t_client *client);
+void				send_ping_request(t_client *client,
+					struct timeval *timestamp);
 
 /*
 **	icmp functions
@@ -173,10 +193,17 @@ void				icmp_time_exceeded(struct iphdr *iphdr,
 					struct icmphdr *icmphdr, size_t size);
 
 /*
+**	signal functions
+*/
+
+void				set_signals(void);
+void				print_statistics(int signal);
+
+/*
 **	others
 */
 
-void				print_statistics(int signal);
+void				set_timeout(struct timeval *timeout, struct timeval *now);
 char				*get_client_addr(t_client *client);
 
 extern t_env	g_e;

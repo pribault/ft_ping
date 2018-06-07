@@ -31,23 +31,23 @@ __sum16	compute_sum(void *ptr, size_t size)
 
 void	debug_iphdr(struct iphdr *iphdr)
 {
-	ft_printf("iphdr:\n");
-	ft_printf("\tihl: %u\n", iphdr->ihl);
-	ft_printf("\tversion: %u\n", iphdr->version);
-	ft_printf("\tcheck: %hu\n", iphdr->check);
-	ft_printf("\ttos: %hhu\n", iphdr->tos);
-	ft_printf("\tlength: %hu\n", iphdr->tot_len);
-	ft_printf("\tid: %hu\n", iphdr->id);
-	ft_printf("\tfragment offset: %hu\n", iphdr->frag_off);
-	ft_printf("\tttl: %hhu\n", iphdr->ttl);
-	ft_printf("\tprotocol: %hhu\n", iphdr->protocol);
-	ft_printf("\tsource addr: %hhu.%hhu.%hhu.%hhu\n",
+	printf("iphdr:\n");
+	printf("\tihl: %u\n", iphdr->ihl);
+	printf("\tversion: %u\n", iphdr->version);
+	printf("\tcheck: %hu\n", iphdr->check);
+	printf("\ttos: %hhu\n", iphdr->tos);
+	printf("\tlength: %hu\n", iphdr->tot_len);
+	printf("\tid: %hu\n", iphdr->id);
+	printf("\tfragment offset: %hu\n", iphdr->frag_off);
+	printf("\tttl: %hhu\n", iphdr->ttl);
+	printf("\tprotocol: %hhu\n", iphdr->protocol);
+	printf("\tsource addr: %hhu.%hhu.%hhu.%hhu\n",
 		((uint8_t *)&iphdr->saddr)[0], ((uint8_t *)&iphdr->saddr)[1],
 		((uint8_t *)&iphdr->saddr)[2], ((uint8_t *)&iphdr->saddr)[3]);
-	ft_printf("\tdest addr: %hhu.%hhu.%hhu.%hhu\n",
+	printf("\tdest addr: %hhu.%hhu.%hhu.%hhu\n",
 		((uint8_t *)&iphdr->daddr)[0], ((uint8_t *)&iphdr->daddr)[1],
 		((uint8_t *)&iphdr->daddr)[2], ((uint8_t *)&iphdr->daddr)[3]);
-	ft_printf("\tsum found: %hu\n", compute_sum(iphdr, iphdr->ihl * 4));
+	printf("\tsum found: %hu\n", compute_sum(iphdr, iphdr->ihl * 4));
 }
 
 void	treat_iphdr(struct iphdr *iphdr, size_t size)

@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 NAME =	ft_ping
-FLAGS =	-Wall -Wextra
+FLAGS =	-Wall -Wextra -Werror
 CC = clang
 
 OBJ_DIR =	.obj
@@ -19,7 +19,8 @@ SRC_DIR =	src
 INC_DIR =	include
 
 SRC =	ft_ping.c client_callback.c message_callback.c\
-		flags.c endian.c ip.c icmp.c ping.c icmp_2.c signal.c
+		flags.c endian.c ip.c icmp.c ping.c icmp_2.c signal.c\
+		flags_2.c timeout.c
 OBJ =	$(sort $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC)))
 INC =	ft_ping.h ip.h icmp.h
 
@@ -49,14 +50,14 @@ $(LIBSOCKET)/libsocket.a:
 	make -C $(LIBSOCKET)
 
 $(NAME): $(OBJ) $(LIBFT)/libft.a $(LIBSOCKET)/libsocket.a
-	$(CC) -o $@ $(FLAGS) $(OBJ) -L $(LIBSOCKET) -lsocket -L $(LIBFT) -lft
+	$(CC) -o $@ $(FLAGS) $(OBJ) -L $(LIBSOCKET) -lsocket -L $(LIBFT) -lft -lm
 	sudo chown root:root $(NAME)
 	sudo chmod 4755 $(NAME)
 
 $(OBJ_DIR):
 	mkdir -p $@
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES) | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INCLUDES) Makefile | $(OBJ_DIR)
 	$(CC) -o $@ $(FLAGS) -I $(INC_DIR) -I $(LIBFT_INC_DIR) -I $(LIBSOCKET_INC_DIR) -c $<
 
 clean:

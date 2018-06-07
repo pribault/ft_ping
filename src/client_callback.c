@@ -51,7 +51,6 @@ void	client_add(t_socket *socket, t_client *client)
 void	client_del(t_socket *socket, t_client *client)
 {
 	(void)socket;
-	ft_printf("client removed\n");
 	if (client == g_e.client)
 		g_e.client = NULL;
 }
@@ -60,5 +59,4 @@ void	client_excpt(t_socket *socket, t_client *client)
 {
 	(void)socket;
 	(void)client;
-	ft_printf("client exception\n");
 }

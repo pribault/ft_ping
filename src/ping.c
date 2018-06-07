@@ -35,7 +35,7 @@ void	fill_icmp_header(struct icmphdr *icmphdr)
 {
 	icmphdr->type = ICMP_ECHO;
 	icmphdr->un.echo.id = getpid();
-	icmphdr->un.echo.sequence = g_e.icmp_seq;
+	icmphdr->un.echo.sequence = g_e.icmp_seq++;
 	icmphdr->checksum = compute_sum(icmphdr, (sizeof(struct icmphdr) +
 		g_e.packet_size));
 	icmphdr->checksum = (icmphdr->checksum << 8) | (icmphdr->checksum >> 8);
@@ -61,12 +61,10 @@ void	fill_queue(void *queue, size_t size, struct timeval *now)
 		*(uint8_t *)(queue + i++) = c++;
 }
 
-void	send_ping_request(t_client *client)
+void	send_ping_request(t_client *client, struct timeval *timestamp)
 {
 	t_msg			msg;
-	struct timeval	timestamp;
 
-	gettimeofday(&timestamp, NULL);
 	msg.size = sizeof(struct iphdr) + sizeof(struct icmphdr) +
 	g_e.packet_size;
 	if (!(msg.ptr = malloc(msg.size)))
@@ -74,31 +72,32 @@ void	send_ping_request(t_client *client)
 	ft_bzero(msg.ptr, msg.size);
 	fill_ip_header(client, msg.ptr);
 	fill_queue(msg.ptr + sizeof(struct iphdr) + sizeof(struct icmphdr),
-		g_e.packet_size, &timestamp);
+		g_e.packet_size, timestamp);
 	fill_icmp_header(msg.ptr + sizeof(struct iphdr));
 	socket_enqueue_write(g_e.socket, client, &msg);
+	g_e.prev_send = *timestamp;
 }
 
 void	manage_ping_requests()
 {
+	struct timeval	timeout;
 	struct timeval	now;
 	size_t			diff;
 
 	gettimeofday(&now, NULL);
-	diff = (now.tv_sec - g_e.prev.tv_sec) * 1000000 +
-		(now.tv_usec - g_e.prev.tv_usec);
-	if ((!g_e.prev.tv_sec && !g_e.prev.tv_usec) ||
-		diff >= g_e.interval)
+	diff = (now.tv_sec - g_e.prev_send.tv_sec) * 1000000 +
+		(now.tv_usec - g_e.prev_send.tv_usec);
+	if (g_e.transmitted < g_e.count &&
+		((!g_e.prev_send.tv_sec && !g_e.prev_send.tv_usec) ||
+		diff >= g_e.interval))
 	{
-		send_ping_request(g_e.client);
-		g_e.prev = now;
-		now.tv_sec = g_e.interval / 1000000;
-		now.tv_usec = g_e.interval % 1000000;
+		send_ping_request(g_e.client, &now);
+		timeout = (struct timeval){g_e.interval / 1000000,
+			g_e.interval % 1000000};
 	}
-	else
-	{
-		now.tv_sec = (g_e.interval - diff) / 1000000;
-		now.tv_usec = (g_e.interval - diff) % 1000000;
-	}
-	socket_set_timeout(g_e.socket, &now);
+	else if (g_e.transmitted < g_e.count)
+		timeout = (struct timeval){(g_e.interval - diff) / 1000000,
+			(g_e.interval - diff) % 1000000};
+	set_timeout(&timeout, &now);
+	socket_set_timeout(g_e.socket, &timeout);
 }

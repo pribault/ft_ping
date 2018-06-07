@@ -22,7 +22,9 @@ void	icmp_time_exceeded(struct iphdr *iphdr,
 		return ((g_e.opt & OPT_VERBOSE) ? ft_error(2,
 			ERROR_INVALID_DEST_UNREACH, NULL) : (void)0);
 	gettimeofday(&now, NULL);
-	ft_printf("From %s icmp_seq=%lu Time to live exceeded\n",
+	printf("From %s icmp_seq=%hu Time to live exceeded\n",
 		inet_ntop(IPV4, &iphdr->saddr, buffer, sizeof(buffer)),
-		icmphdr->un.echo.sequence);
+		((struct icmphdr *)((void*)&icmphdr[1] +
+			sizeof(struct iphdr)))->un.echo.sequence);
+	g_e.lost++;
 }
