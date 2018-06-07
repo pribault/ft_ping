@@ -34,6 +34,6 @@ void	print_usage(void)
 {
 	printf("Usage: ft_ping [-hv] [--help] [--interval interval]\n");
 	printf("               [--ttl ttl] [--packetsize packet_size]\n");
-	printf("               [--count count]\n");
+	printf("               [--count count] [--timeout seconds]\n");
 	exit(1);
 }
