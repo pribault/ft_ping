@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/06 23:54:57 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/07 00:02:46 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/08 01:56:11 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	print_statistics(int signal)
 	printf("%lu packets transmitted, %lu received, ", g_e.transmitted,
 		g_e.received);
 	if (g_e.received + g_e.lost != g_e.transmitted)
-		printf("+%lu errors, ", g_e.transmitted - g_e.lost - g_e.received);
+		printf("+%lu errors, ", g_e.lost);
 	if (g_e.transmitted)
 		printf("%lu%% packet loss, ", 100 - ((g_e.received * 100) /
 		g_e.transmitted));

@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:13 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/07 09:11:58 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/08 01:28:46 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,12 @@ typedef struct		s_icmp_hdlr
 					size_t);
 }					t_icmp_hdlr;
 
+typedef struct		s_icmp_str
+{
+	uint8_t			type;
+	char			*str;
+}					t_icmp_str;
+
 /*
 ******************
 **	prototypes  **
@@ -190,6 +196,8 @@ void				icmp_echo_reply(struct iphdr *iphdr,
 void				icmp_dest_unreach(struct iphdr *iphdr,
 					struct icmphdr *icmphdr, size_t size);
 void				icmp_time_exceeded(struct iphdr *iphdr,
+					struct icmphdr *icmphdr, size_t size);
+void				icmp_other(struct iphdr *iphdr,
 					struct icmphdr *icmphdr, size_t size);
 
 /*

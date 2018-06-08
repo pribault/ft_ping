@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 21:17:12 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/08 00:37:51 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/08 01:45:08 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,27 +27,6 @@ __sum16	compute_sum(void *ptr, size_t size)
 	if (size % 2)
 		sum += *(uint8_t *)(ptr + size - 1) << 8;
 	return (~((sum & 0xffff) + ((sum & 0xffff0000) >> 16)));
-}
-
-void	debug_iphdr(struct iphdr *iphdr)
-{
-	printf("iphdr:\n");
-	printf("\tihl: %u\n", iphdr->ihl);
-	printf("\tversion: %u\n", iphdr->version);
-	printf("\tcheck: %hu\n", iphdr->check);
-	printf("\ttos: %hhu\n", iphdr->tos);
-	printf("\tlength: %hu\n", iphdr->tot_len);
-	printf("\tid: %hu\n", iphdr->id);
-	printf("\tfragment offset: %hu\n", iphdr->frag_off);
-	printf("\tttl: %hhu\n", iphdr->ttl);
-	printf("\tprotocol: %hhu\n", iphdr->protocol);
-	printf("\tsource addr: %hhu.%hhu.%hhu.%hhu\n",
-		((uint8_t *)&iphdr->saddr)[0], ((uint8_t *)&iphdr->saddr)[1],
-		((uint8_t *)&iphdr->saddr)[2], ((uint8_t *)&iphdr->saddr)[3]);
-	printf("\tdest addr: %hhu.%hhu.%hhu.%hhu\n",
-		((uint8_t *)&iphdr->daddr)[0], ((uint8_t *)&iphdr->daddr)[1],
-		((uint8_t *)&iphdr->daddr)[2], ((uint8_t *)&iphdr->daddr)[3]);
-	printf("\tsum found: %hu\n", compute_sum(iphdr, iphdr->ihl * 4));
 }
 
 /*
