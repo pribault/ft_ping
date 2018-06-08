@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:09 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/07 00:58:23 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/08 10:46:27 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	print_usage(void)
 {
 	printf("Usage: ft_ping [-hv] [--help] [--interval interval]\n");
 	printf("               [--ttl ttl] [--packetsize packet_size]\n");
-	printf("               [--count count] [--timeout seconds]\n");
+	printf("               [--count count] [--timeout seconds] ");
+	printf("destination\n");
 	exit(1);
 }

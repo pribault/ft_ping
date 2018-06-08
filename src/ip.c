@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/29 21:17:12 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/08 01:45:08 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/08 09:59:09 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	treat_iphdr(struct iphdr *iphdr, size_t size)
 	if (iphdr->ihl * 4 > size)
 		return ((g_e.opt & OPT_VERBOSE) ? ft_error(2, ERROR_INVALID_IHL, 0) :
 			(void)0);
-	if (compute_sum(iphdr, iphdr->ihl * 4))
+		if (compute_sum(iphdr, iphdr->ihl * 4))
 		return ((g_e.opt & OPT_VERBOSE) ? ft_error(2, ERROR_INVALID_CHECKSUM,
 		0) : (void)0);
 		if (iphdr->protocol == IPV4_PROTOCOL_ICMP)

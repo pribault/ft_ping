@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:13 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/08 01:28:46 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/08 10:20:00 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 
 # include "libft.h"
 # include "libsocket.h"
-# include "ip.h"
-# include "icmp.h"
+# include <linux/ip.h>
+# include <linux/icmp.h>
 # include <sys/time.h>
 # include <arpa/inet.h>
 # include <stdio.h>

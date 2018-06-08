@@ -1,0 +1,8 @@
+hostname resolve
+rtt line
+ttl
+interval
+pack size
+count
+timeout
+write queue bufferized (circular buffer to securize)

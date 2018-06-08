@@ -6,7 +6,7 @@
 #    By: pribault <pribault@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/04 14:45:06 by pribault          #+#    #+#              #
-#    Updated: 2018/06/08 02:01:25 by pribault         ###   ########.fr        #
+#    Updated: 2018/06/08 10:23:28 by pribault         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRC =	ft_ping.c client_callback.c message_callback.c\
 		flags.c endian.c ip.c icmp.c ping.c icmp_2.c signal.c\
 		flags_2.c timeout.c icmp_3.c
 OBJ =	$(sort $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC)))
-INC =	ft_ping.h ip.h icmp.h
+INC =	ft_ping.h
 
 LIBFT =	libft
 LIBFT_INC_DIR =	$(LIBFT)/include

@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/08 02:01:18 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/08 02:03:48 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/08 09:57:58 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	icmp_redirect(struct iphdr *iphdr,
 	if (size < sizeof(struct icmphdr) + sizeof(struct iphdr) + 8)
 		return ((g_e.opt & OPT_VERBOSE) ? ft_error(2,
 		ERROR_INVALID_DEST_UNREACH, NULL) : (void)0);
-	if (((struct icmphdr *)((void*)&icmphdr[1] +
+		if (((struct icmphdr *)((void*)&icmphdr[1] +
 		sizeof(struct iphdr)))->un.echo.id != getpid())
 		return ;
 	gettimeofday(&now, NULL);

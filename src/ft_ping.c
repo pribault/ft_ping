@@ -6,7 +6,7 @@
 /*   By: pribault <pribault@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/04 14:44:09 by pribault          #+#    #+#             */
-/*   Updated: 2018/06/07 23:38:29 by pribault         ###   ########.fr       */
+/*   Updated: 2018/06/08 12:59:37 by pribault         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 t_env	g_e;
 
 t_error	g_errors[] = {
-	{ERROR_CANNOT_CONNECT, "cannot connect to %s", 0},
+	{ERROR_CANNOT_CONNECT, "cannot connect to %s", ERROR_EXIT},
 	{ERROR_CANNOT_CREATE_SOCKET, "cannot create socket", 0},
 	{ERROR_PACKET_TOO_SMALL,
 		"packet received too small, ignoring (%lu bytes)", 0},
@@ -24,7 +24,7 @@ t_error	g_errors[] = {
 	{ERROR_INVALID_DEST_UNREACH, "invalid dest unreach icmp packet", 0},
 	{ERROR_PROTOCOL_NOT_HANDLED, "protocol %u not handled", 0},
 	{ERROR_ADDRESS_SET, "error already set to %s", 0},
-	{ERROR_NO_ADDRESS, "no address set", ERROR_EXIT},
+	{ERROR_NO_ADDRESS, "no address set", 0},
 	{ERROR_CANNOT_FIND_ADDRESS, "cannot find address %s", ERROR_EXIT},
 	{ERROR_ALLOCATION_2, "cannot allocate memory", 0},
 	{ERROR_CANNOT_SET_OPTION, "cannot set socket options", 0},
@@ -104,7 +104,7 @@ void	init_env(void)
 	g_e.sum = 0;
 	g_e.sum2 = 0;
 	socket_set_callback(g_e.socket, SOCKET_CLIENT_ADD_CB, &client_add);
-	socket_set_callback(g_e.socket, SOCKET_CLIENT_DEL_CB, &client_add);
+	socket_set_callback(g_e.socket, SOCKET_CLIENT_DEL_CB, &client_del);
 	socket_set_callback(g_e.socket, SOCKET_CLIENT_EXCEPTION_CB,
 		&client_excpt);
 	socket_set_callback(g_e.socket, SOCKET_MSG_RECV_CB, &msg_recv);
@@ -121,7 +121,10 @@ int		main(int argc, char **argv)
 	init_env();
 	get_flags(argc, argv);
 	if (!g_e.address)
+	{
 		ft_error(2, ERROR_NO_ADDRESS, NULL);
+		print_usage();
+	}
 	if (!create_icmp_socket(g_e.socket))
 		ft_error(2, ERROR_CANNOT_CONNECT, g_e.address);
 	while (1)
